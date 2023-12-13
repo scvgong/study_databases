@@ -10,6 +10,8 @@ collection = database['fruits']
 
 # insert 작업 진행
 collection.insert_one({"name": "오렌지", "color": "오렌지", "origin": "미국", "season": "겨울"})
-# collection.insert_one({"name": "포도", "color": "보라", "origin": "한국", "season": "가을"})
+
+dict_fruits = {"name": "포도", "color": "보라", "origin": "한국", "season": "가을"}
+collection.insert_one(dict_fruits)
 
 pass
