@@ -25,4 +25,4 @@ def insert_fruit(connect_data,input_data): # 삽입함수
         connect_data.insert_one(fruit)
 
 
-insert_fruit(connect_data, input_data)
+insert_fruit(connect_data,input_data)
