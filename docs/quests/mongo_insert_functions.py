@@ -7,8 +7,6 @@ def connect(): # connect 함수
     
     return collection
 
-# insert function
-
 def data(): # 데이터 함수
     fruits = [
         {"name": "사과", "color": "빨강", "origin": "한국", "season": "가을"},
@@ -21,9 +19,10 @@ def data(): # 데이터 함수
 connect_data = connect()
 input_data = data()
 
-def insert_fruit(): # 삽입함수
+# insert function
+def insert_fruit(connect_data,input_data): # 삽입함수
     for fruit in input_data:
         connect_data.insert_one(fruit)
 
 
-insert_fruit()
+insert_fruit(connect_data, input_data)
