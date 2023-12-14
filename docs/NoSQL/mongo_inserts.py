@@ -13,5 +13,5 @@ collection.insert_one({"name": "오렌지", "color": "오렌지", "origin": "미
 
 dict_fruits = {"name": "포도", "color": "보라", "origin": "한국", "season": "가을"}
 collection.insert_one(dict_fruits)
-
+result = collection.insert_one(dict_fruits)
 pass
