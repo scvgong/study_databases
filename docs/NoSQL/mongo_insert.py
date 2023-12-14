@@ -8,7 +8,7 @@ database = mongoClient["local"]
 # collection 작업
 collection = database['fruits']
 
-# insert 작업 진행
+# insert 작업 진행, 한번에 여러데이터를 넣는게 좋다. 실행할때마다 데이터 삽입된다
 collection.insert_one({"name": "오렌지", "color": "오렌지", "origin": "미국", "season": "겨울"})
 
 dict_fruits = {"name": "포도", "color": "보라", "origin": "한국", "season": "가을"}
