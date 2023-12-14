@@ -1,9 +1,13 @@
 # connect function
 from pymongo import MongoClient
-def connect(): # connect 함수
-    mongoClient = MongoClient("mongodb://localhost:27017")
-    database = mongoClient["local"]
-    collection = database['fruits']
+mongo_url = "mongodb://localhost:27017"
+client = "local"
+dbm = 'fruits'
+
+def connect(mongo_url,client,dbm): # connect 함수
+    mongoClient = MongoClient(mongo_url)
+    database = mongoClient[client]
+    collection = database[dbm]
     
     return collection
 
@@ -16,7 +20,7 @@ def data(): # 데이터 함수
     ]
     return fruits
 
-connect_data = connect() # connect 함수 변수 선언
+connect_data = connect(mongo_url,client,dbm) # connect 함수 변수 선언
 input_data = data() # data 함수 변수 선언
 
 # insert function
