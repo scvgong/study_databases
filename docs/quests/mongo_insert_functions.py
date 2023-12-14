@@ -16,8 +16,8 @@ def data(): # 데이터 함수
     ]
     return fruits
 
-connect_data = connect()
-input_data = data()
+connect_data = connect() # connect 함수 변수 선언
+input_data = data() # data 함수 변수 선언
 
 # insert function
 def insert_fruit(connect_data,input_data): # 삽입함수
