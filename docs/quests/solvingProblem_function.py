@@ -80,6 +80,7 @@ def run_quiz(connect_data):
         
     print("최종 점수 : {}".format(score) ) 
 
+    # 등급 출력
     grade = ''
     if score >= 80:
         print("A 등급입니다.")
