@@ -1,16 +1,16 @@
 from pymongo import MongoClient
 
-mongo_url = "mongodb://localhost:27017"
-client = "local"
-dbm = "todolist"
-
 # 몽고 DB 커넥트 함수
-def connect(mongo_url,client,dbm): # connect 함수
-    mongoClient = MongoClient(mongo_url)
-    database = mongoClient[client]
-    collection = database[dbm]
-    
-    return collection
+def connect(): # connect 함수
+    mongoClient = MongoClient("mongodb://localhost:27017")
+    database = mongoClient["local"]
+    return database
+
+database = connect()
+
+collection = database["todolist"] # todolist를 collection로 변수선언
+user_collection = database["user"]
+user_todoList_collection = database["user_todoList"]
 
 # todo_list에 대한 데이터 함수
 def data_todoList():
@@ -38,25 +38,51 @@ def data_todoList():
     ]
     return todo_list
 
-# 사용자 입력 함수
-def get_username():
-    user_name = input("사용자 이름 입력 : ")
-    return user_name
-
-connect_data = connect(mongo_url,client,dbm) # connect 시켜주는 변수
+# todoList를 받을 변수
+ 
 input_data = data_todoList() # todo_list 데이터 넣어주는 변수
 
 # DB에 todo_list 데이터 삽입 함수
-def insert_todoList(connect_data,input_data):
-    connect_data.insert_many(input_data)
+def insert_todoList():
+    for x in input_data: # 데이터 삽입이 반복될때
+        if collection.count_documents(x) == 0: # 동일정보 확인후 없을경우만 진행
+            collection.insert_one(x)# todolist DB를 insert 해준다
+        pass
+    
+    return 
+
+# 사용자 입력 함수
+def get_username():
+    user_name = input("사용자 이름 입력 : ")
+    name = {"name":user_name} # key : name / value : user_name
+    return name
+
+# 사용자를 받을 변수
+input_user = get_username()
+
+# DB에 user 삽입 함수
+def insert_user():
+    result = user_collection.insert_one(input_user)
+    inserted_id = result.inserted_id
+    # print("inserted_id : {}".format(inserted_id))
+    return inserted_id
+
+
+
+
 
 # 사용자가 입력 받아서 todoList 작업 한 것을 DB에 저장하는 함수
-def run_todoList():
-    ## 1. 사용자 입력 변수, DB에서 todoList 찾기 
-    user_name = get_username()
-    todoList = connect_data.find()
+# def run_todoList():
+#     ## 1. 사용자 입력 변수, DB에서 todoList 찾기
+#     user_name = get_username()
+#     todoList = connect_data.find()
 
-    ## 2. todoList에 있는 id를 찾을수 있게 사용자에 매칭
-    ## 3. 사용자가 todoList 실행
-    ## 4. 작업완료 여부파악 -> 완료시 다음 사용자, 진행시 전사용자 다시 진행
-    ## 5. 모든 사용자 완료되면 DB에 todoList 진행사항 DB에 업로드
+#     ## 2. todoList에 있는 id를 찾을수 있게 사용자에 매칭
+
+#     ## 3. 사용자가 todoList 실행
+
+#     ## 4. 작업완료 여부파악 -> 완료시 다음 사용자, 진행시 전사용자 다시 진행
+
+#     ## 5. 모든 사용자 완료되면 DB에 todoList 진행사항 DB에 업로드
+# def insert_user_todoList():
+#     return
