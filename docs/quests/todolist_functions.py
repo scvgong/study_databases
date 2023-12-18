@@ -60,29 +60,48 @@ def get_username():
 # 사용자를 받을 변수
 input_user = get_username()
 
-# DB에 user 삽입 함수
+
+# DB에 user 삽입 , 사용자에 대한 _id 변수로 받기
 def insert_user():
-    result = user_collection.insert_one(input_user)
-    inserted_id = result.inserted_id
-    # print("inserted_id : {}".format(inserted_id))
+    if user_collection.count_documents(input_user) == 0:
+        result = user_collection.insert_one(input_user)
+        inserted_id = result.inserted_id
+    else:
+        inserted_id = user_collection.find_one(input_user)['_id']
+    
+
     return inserted_id
 
 
+# To-do 리스트 보여주기 및 선택 함수
+def select_todo(user_id):
+    while True: # 작업을 계속할 수 있도록 루프
+        todos = list(collection.find({},{"_id":0})) # To-do 리스트 가져오기
+        print("ToDo List 중 하나 선택하세요 : ")
+        for i, todo in enumerate(todos, start = 1): # To-do 리스트 출력
+            print(f"{i}. {todo['title']}") 
+
+        selected = int(input("Title 번호 : ")) - 1 # 사용자 선택
+        if 0 <= selected < len(todos): # 선택한 번호가 유효한 범위에 있는지 확인
+            selected_todo = todos[selected]  # 선택한 To-do 항목
+            status = input("Status : ") # 상태 입력 받기
+            user_name = input_user['name']
+            user_todoList_collection.insert_one({"user_id": user_id, "name":user_name, "todo": selected_todo, "status": status})  # 선택한 항목 및 상태 저장
+            print("저장")
+        else :
+            print("다시")
+
+        if input("종료 여부 : ").lower() in ['q','x']: # 종료 조건 확인
+            break # 작업 종료
 
 
 
-# 사용자가 입력 받아서 todoList 작업 한 것을 DB에 저장하는 함수
-# def run_todoList():
-#     ## 1. 사용자 입력 변수, DB에서 todoList 찾기
-#     user_name = get_username()
-#     todoList = connect_data.find()
-
-#     ## 2. todoList에 있는 id를 찾을수 있게 사용자에 매칭
-
-#     ## 3. 사용자가 todoList 실행
-
-#     ## 4. 작업완료 여부파악 -> 완료시 다음 사용자, 진행시 전사용자 다시 진행
-
-#     ## 5. 모든 사용자 완료되면 DB에 todoList 진행사항 DB에 업로드
-# def insert_user_todoList():
-#     return
+def add_user():
+    while True:  # 여러 사용자를 위한 루프
+        print("------------------------")
+        input_user = get_username()  # 사용자 데이터 받기
+        user_id = insert_user()  # 사용자 데이터 삽입 및 ID 저장
+        select_todo(user_id)  # 사용자가 To-do 항목 선택 및 상태 업데이트
+        if input("다른 사용자를 위해 계속하려면 'c'를, 종료하려면 'q' 또는 'x'를 입력하세요: ").lower() not in ['c']:  # 종료 조건 확인
+            break  # 실행 종료
+    print("------------------------")
