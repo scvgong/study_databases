@@ -58,23 +58,25 @@ def get_username():
     return name
 
 # 사용자를 받을 변수
-input_user = get_username()
+# input_user = get_username()
 
 
 # DB에 user 삽입 , 사용자에 대한 _id 변수로 받기
-def insert_user():
-    if user_collection.count_documents(input_user) == 0:
-        result = user_collection.insert_one(input_user)
+def insert_user(user_info):
+    if user_collection.count_documents(user_info) == 0:
+        result = user_collection.insert_one(user_info)
         inserted_id = result.inserted_id
     else:
-        inserted_id = user_collection.find_one(input_user)['_id']
+        user_data = user_collection.find_one(user_info)
+        inserted_id = user_data['_id'] if user_data is not None else None
+        # user_collection.find_one(input_user)['_id']
     
-
     return inserted_id
 
 
 # To-do 리스트 보여주기 및 선택 함수
-def select_todo(user_id):
+def select_todo(user_id,user_info):
+    
     while True: # 작업을 계속할 수 있도록 루프
         todos = list(collection.find({},{"_id":0})) # To-do 리스트 가져오기
         print("ToDo List 중 하나 선택하세요 : ")
@@ -85,7 +87,10 @@ def select_todo(user_id):
         if 0 <= selected < len(todos): # 선택한 번호가 유효한 범위에 있는지 확인
             selected_todo = todos[selected]  # 선택한 To-do 항목
             status = input("Status : ") # 상태 입력 받기
-            user_name = input_user['name']
+
+            user_id = insert_user(user_info) # user 정보를 id 넣기
+            user_name = user_info['name'] # username 넣기
+            
             user_todoList_collection.insert_one({"user_id": user_id, "name":user_name, "todo": selected_todo, "status": status})  # 선택한 항목 및 상태 저장
             print("저장")
         else :
@@ -94,14 +99,15 @@ def select_todo(user_id):
         if input("종료 여부 : ").lower() in ['q','x']: # 종료 조건 확인
             break # 작업 종료
 
-
-
+        if user_todoList_collection.find({"user_id":user_id, "user_name":user_name}) != 0:
+            user_todoList_collection.update_one({"user_id": user_id, "name":user_name, "todo": selected_todo, "status": status},upsert=True) 
+        
 def add_user():
     while True:  # 여러 사용자를 위한 루프
         print("------------------------")
-        input_user = get_username()  # 사용자 데이터 받기
-        user_id = insert_user()  # 사용자 데이터 삽입 및 ID 저장
-        select_todo(user_id)  # 사용자가 To-do 항목 선택 및 상태 업데이트
+        new_user = get_username()  # 사용자 데이터 받기
+        user_id = insert_user(new_user)  # 사용자 데이터 삽입 및 ID 저장
+        select_todo(user_id, new_user)  # 사용자가 To-do 항목 선택 및 상태 업데이트
         if input("다른 사용자를 위해 계속하려면 'c'를, 종료하려면 'q' 또는 'x'를 입력하세요: ").lower() not in ['c']:  # 종료 조건 확인
             break  # 실행 종료
     print("------------------------")
