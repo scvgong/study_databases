@@ -99,8 +99,8 @@ def select_todo(user_id,user_info):
         if input("종료 여부 : ").lower() in ['q','x']: # 종료 조건 확인
             break # 작업 종료
 
-        if user_todoList_collection.find({"user_id":user_id, "user_name":user_name}) != 0:
-            user_todoList_collection.update_one({"user_id": user_id, "name":user_name, "todo": selected_todo, "status": status},upsert=True) 
+        # if user_todoList_collection.find({"user_id":user_id, "user_name":user_name}) != 0:
+        #     user_todoList_collection.update_one({"user_id": user_id, "name":user_name, "todo": selected_todo, "status": status},upsert=True) 
         
 def add_user():
     while True:  # 여러 사용자를 위한 루프
