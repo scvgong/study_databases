@@ -1,7 +1,12 @@
+-- 1번째 조건
 SELECT * 
 FROM Customers 
-WHERE Country NOT IN ('USA','Germany')
-AND CustomerID BETWEEN 50 AND 89
-AND City IN ('London');
+WHERE Country NOT IN ('USA','Germany');
+-- Number of Records: 67
 
--- Number of Records: 2
+-- 2번째 조건
+SELECT * 
+FROM Customers 
+WHERE CustomerID BETWEEN 50 AND 89
+AND City = 'London';
+-- Number of Records: 67
