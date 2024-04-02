@@ -12,3 +12,14 @@ WHERE EmployeeID IN (SELECT EmployeeID
 					GROUP BY EmployeeID
 					HAVING COUNT(EmployeeID) >= 20
                     ORDER BY EmployeeID ASC);
+
+-- supplierid
+SELECT Category_GROUP.SupplierID, COUNT(Category_GROUP.SupplierID) CNT 
+FROM (SELECT SupplierID, CategoryID, COUNT(CategoryID) CNT 
+		FROM Products
+		WHERE 1 = 1
+		GROUP BY SupplierID, CategoryID
+    	) AS Category_GROUP
+WHERE 1 = 1
+GROUP BY Category_GROUP.SupplierID
+ORDER BY COUNT(Category_GROUP.SupplierID) DESC;
